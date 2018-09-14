@@ -2,11 +2,14 @@ package Test;
 
 
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import Dao.bookDao;
 import HButils.HButils;
 import hibernate.text.Book;
 
@@ -49,25 +52,32 @@ public class addtext {
 	@Test
 	public void select() {
 		
-		Book book=(Book) Session.get(Book.class, 1L);
+	//	Book book=(Book) Session.get(Book.class, 1L);
 	//	Book book=(Book) Session.load(Book.class, 1L);  load懒加载
 		
-		System.out.println(book.toString());
+	
 	}
 	
 	@Test
 	public void update() {
 		
-		Book book=(Book) Session.get(Book.class, 1L);
-		Session.update(book);
+	//	Book book=(Book) Session.get(Book.class, 1L);
+	//Session.update(book);
 	}
 	@Test
 	public void savaORupdate() {
 		Book book=new Book("水浒传","108和3","不知名出版社","是来按");		
 		
 		//如果book id为空则为添加 如果不为空就是修改
-		 Session.saveOrUpdate(book);
+		// Session.saveOrUpdate(book);
 		
+	}
+	@Test
+	public void deleteByTitle() {
+		bookDao bDao=new bookDao();
+		Book book=bDao.findById(Session, 2L);
+		
+
 	}
 	
 }

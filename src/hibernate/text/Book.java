@@ -1,7 +1,5 @@
 package hibernate.text;
 
-import java.util.List;
-
 public class Book {
 	private Long id;
 	private String title;
