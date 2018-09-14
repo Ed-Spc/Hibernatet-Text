@@ -3,48 +3,71 @@ package Test;
 
 
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
-import org.hibernate.service.ServiceRegistryBuilder;
-import org.hibernate.service.internal.StandardServiceRegistryImpl;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
+import HButils.HButils;
 import hibernate.text.Book;
 
 /**
  * 方法2 
  * 
- * 建表和添加数据
+ * 数据增删改查
  * 
  * 
  * */
 
 
 public class addtext {
+	private Session Session=null;
 	
-	@Test	//使用session添加数据
-	public void add() {
-		
-		// 1.加载加载当前项目的cfg配置文件
-		Configuration cfg = new Configuration().configure();
-		
-		//2.创建SessionFactory 
-		ServiceRegistry serviceRegistry =
-				new ServiceRegistryBuilder().applySettings(cfg.getProperties())
-				.buildServiceRegistry();
-			
-		
-		SessionFactory sessionFactory=cfg.buildSessionFactory(serviceRegistry);
-		
-		//3.创建session
-		Session session =sessionFactory.openSession();
-		
-		//4.添加对象
-		Book book =new Book("西游记","野外、人兽、有马", "人民出版社", "罗贯中");
-		session.save(book);
-		
-		//hibernate默认不提交事务
-		session.beginTransaction().commit();
+	@Before		//测试前执行
+	public void before() {
+		Session=HButils.getSession(); //hibernate默认不提交事务
 	}
+	
+	@After		//测试后执行
+	public void after() {
+		Session.beginTransaction().commit();
+	}
+	
+	
+	@Test	
+	public void add() {			
+		Book book =new Book("西游记","野外、人兽、有马", "人民出版社", "罗贯中");
+		//Session.save(book);		
+	}
+	
+	@Test
+	public void delete() {
+		Book book =new Book();
+		book.setId(1L);
+		//Session.delete(book);  //只能通过ID删除
+		
+	}
+	@Test
+	public void select() {
+		
+		Book book=(Book) Session.get(Book.class, 1L);
+	//	Book book=(Book) Session.load(Book.class, 1L);  load懒加载
+		
+		System.out.println(book.toString());
+	}
+	
+	@Test
+	public void update() {
+		
+		Book book=(Book) Session.get(Book.class, 1L);
+		Session.update(book);
+	}
+	@Test
+	public void savaORupdate() {
+		Book book=new Book("水浒传","108和3","不知名出版社","是来按");		
+		
+		//如果book id为空则为添加 如果不为空就是修改
+		 Session.saveOrUpdate(book);
+		
+	}
+	
 }
